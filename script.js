@@ -98,6 +98,7 @@ const jugar = () => {
             alert(mensajeFinal)
         }
     }
-    alert("Excelente juego! Pero todavía falta para Quatar...\n Mientras podes jugar de nuevo!")
+    alert("Excelente juego! Pero todavía falta para Qatar...\n Mientras podes jugar de nuevo!")
+
     reiniciarPuntajes()
 }
