@@ -36,7 +36,7 @@ const patear = () => {
         } else if (ingreso < 1 || ingreso > 5 ){
             alert("Ingreso inválido! Intente nuevamente...")
         } else {
-            zonaElegida = ingreso
+            // zonaElegida = ingreso
             let mensajePenal = "Se prepara el jugador...\n"
             if (ingreso == 1 ){
                 mensajePenal +="Patea al mediooo... \n"
@@ -45,8 +45,8 @@ const patear = () => {
             } else {
                 mensajePenal += "Dispara al angulooo....\n"
             }
-
-            if (esGol(zonaElegida)){
+            
+            if (esGol(ingreso)){
                 alert(mensajePenal + "GOOOOOOOL!")
                 return "gol"
             } else {
@@ -66,12 +66,14 @@ const anotador = (intento, resultado) => {
     }
     tableroResultado += str
 }
+
 const jugar = () => {
-
+    console.log("-- Comienzo del juego --")
     alert("Bienvenido al pateapenales! \n Debe anotar al menos 4 goles para ser el campeón!\n Para patear o atajar, ingrese un número del 1 al 5 \n Quién ganará?")
-
+    
     while (intentos < 5){
         intentos += 1
+        console.log("Intento n° " + intentos)
         patada = patear()
         switch (patada) {
             case "gol":
@@ -84,6 +86,7 @@ const jugar = () => {
             case "salir":
             intentos = 6
             alert("adiós!")
+            console.log("-- Juego cancelado --")
             break
         }
         if (intentos < 5){
@@ -91,14 +94,15 @@ const jugar = () => {
         } else if (intentos == 5) {
             mensajeFinal="Fin del juego! Resultado:\n" + tableroResultado  
             if (resultado > 3) {
-                mensajeFinal += "\n Ganador!"
+                mensajeFinal += "\n 🏆 Ganador! 🏆"
             } else {
                 mensajeFinal += "\n Perdedor!"
             }
             alert(mensajeFinal)
+            console.log("-- Fin del juego --")
         }
     }
     alert("Excelente juego! Pero todavía falta para Qatar...\n Mientras podes jugar de nuevo!")
-
+    
     reiniciarPuntajes()
 }
