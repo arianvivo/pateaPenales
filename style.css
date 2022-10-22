@@ -1,3 +1,7 @@
+*{
+    margin: 0;
+    padding: 0;
+}
 .boton-jugar {
     height: 80px;
     width: 80px;

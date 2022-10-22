@@ -26,26 +26,31 @@ const esGol = (zonaElegida) => {
 
 const patear = () => {
     //Devuelve una cadena dependiendo la elección del jugador
-    respuesta = ""
-    while (respuesta == "" ){
+    while (true){
         let ingreso = prompt(" INTENTO N° " + intentos + "\nIngrese a dónde quiere patear... \n Puede tomar la imagen de referencia! \n cancelar para salir ")
         if (ingreso == null) {
-            respuesta = "salir"
             return "salir"
         }
         if (isNaN(ingreso)) {
             alert("Debe ingresar sólo números! Intente nuevamente...")
-            continue
         } else if (ingreso < 1 || ingreso > 5 ){
             alert("Ingreso inválido! Intente nuevamente...")
-            continue
         } else {
             zonaElegida = ingreso
+            let mensajePenal = "Se prepara el jugador...\n"
+            if (ingreso == 1 ){
+                mensajePenal +="Patea al mediooo... \n"
+            } else if (ingreso % 2 == 0) {
+                mensajePenal += "Patea abajooo...\n"
+            } else {
+                mensajePenal += "Dispara al angulooo....\n"
+            }
+
             if (esGol(zonaElegida)){
-                alert("GOOOOOOOL!")
+                alert(mensajePenal + "GOOOOOOOL!")
                 return "gol"
             } else {
-                alert("ATAJÓ EL ARQUERO!")
+                alert(mensajePenal + "ATAJÓ EL ARQUERO!")
                 return "atajo"
             }
         }
@@ -93,6 +98,6 @@ const jugar = () => {
             alert(mensajeFinal)
         }
     }
-
+    alert("Excelente juego! Pero todavía falta para Quatar...\n Mientras podes jugar de nuevo!")
     reiniciarPuntajes()
 }
