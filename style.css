@@ -6,3 +6,17 @@
     height: 80px;
     width: 160px;
 }
+
+.main-wrapper {
+    margin: auto;
+    width: 80%;
+}
+
+.main-wrapper > * {
+    text-align: center;
+}
+
+.img-goal {
+    display: block;
+    margin: 10px auto;
+}
