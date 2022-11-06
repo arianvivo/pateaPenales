@@ -3,6 +3,27 @@ let eleccionMaqina = 0
 let resultado = 0
 let intentos = 0
 let tableroResultado = ""
+let jugadores = []
+//#region equipos
+
+//FIXME: Implementar con clases?
+
+// let equipo = new Object();
+// equipo = {
+
+//     nombre: "nombre",
+//     jugadores: [
+//         "uno",
+//         "dos",
+//         "tres",
+//         "cuatro",
+//         "cinco"
+//     ]
+// }
+
+
+//#endregion
+
 
 const reiniciarPuntajes = () => {
     zonaElegida = 0
@@ -47,7 +68,7 @@ function patear() {
             } else {
                 mensajePenal += "Dispara al angulooo....\n"
             }
-
+            
             if (esGol(ingreso)) {
                 alert(mensajePenal + "GOOOOOOOL!")
                 return "gol"
@@ -108,3 +129,79 @@ const jugar = () => {
     
     reiniciarPuntajes()
 }
+
+const chequearNombre = (nombre) => {
+    console.log("Chequeando " + nombre)
+    if (nombre === "" ){
+        alert("No ha ingresado el nombre completo!")
+        return false
+    } else if (/\d/.test(nombre)){
+        alert("El nombre/apellido no puede contener números!\n(A menos que sea el hijo de Elon Musk...)")
+        return false
+    } else {
+        return true;
+    }
+}
+
+const chequearCamiseta = (camiseta) => {
+    if ((Number.isInteger(Number(camiseta))) && Number(camiseta) >= 1 && Number(camiseta) <= 99 ){
+        return true
+    } else {
+        alert("Sólo ingresar números entre 1 y 99")
+        return false
+    }
+}
+
+// Chequea si existe el jugador:
+//     Si alguien ya tiene esa n° de camiseta
+//     Si hay alguien con el mismo nombre y apellido (permite personas con mismo apellido pero distinto nombre)
+const jugadorExiste = (firstName, lastName, shirtNumber, jugadores) => {
+    console.log("Chequeando existencia...")
+    for (let jugador of jugadores){
+        if (shirtNumber === jugador.camiseta){
+            console.log("Camiseta ocupada!")
+            alert("Camiseta ocupada!")
+            return true
+        }
+        if (lastName === jugador.apellido){
+            console.log("Info: apellido repetido. Chequeando nombre...")
+            if (firstName === jugador.nombre){
+                console.log("Nombre repetido. Jugador duplicado!")
+                alert("Ya existe ese jugador!")
+                return true
+            }
+        }
+    }
+    console.log("Jugador no existe.")
+    return false
+}
+
+const cargarJugadores = () => {
+    console.log("=== Comienzo carga de jugadores! ===")
+    let firstName = document.getElementById("player-first-name").value
+    let lastName = document.getElementById("player-last-name").value
+    let shirtNumber = document.getElementById("player-shirt-number").value
+    
+    if (chequearNombre(firstName.value) && chequearNombre(lastName) && chequearCamiseta(shirtNumber) && !jugadorExiste(firstName,lastName,shirtNumber,jugadores)){
+        console.log("=== Controles exitosos ===")
+        let newPlayer = {
+            nombre: firstName,
+            apellido: lastName,
+            camiseta: shirtNumber
+        }
+        console.log(newPlayer)
+        jugadores.push(newPlayer)
+        cargarListaPlantel(newPlayer)
+    }
+    console.log("=== Fin carga de jugadores ===")
+}
+
+const cargarListaPlantel = (newPlayer) => {
+    let plantel = document.getElementById("player-list")
+    let parrafoNewPlayer = document.createElement("p")
+    parrafoNewPlayer.innerText = newPlayer.nombre + " " + newPlayer.apellido +  " -> N° " + newPlayer.camiseta
+    plantel.appendChild(parrafoNewPlayer)
+}
+
+let playerSubmit = document.getElementById("player-submit")
+playerSubmit.addEventListener("click",cargarJugadores)

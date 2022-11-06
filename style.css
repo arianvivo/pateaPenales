@@ -2,10 +2,15 @@
     margin: 0;
     padding: 0;
 }
-.boton-jugar {
+.boton {
     height: 80px;
     width: 160px;
 }
+
+.boton-jugadores {
+    padding-top: 25px;
+}
+
 
 .main-wrapper {
     margin: auto;
@@ -19,4 +24,21 @@
 .img-goal {
     display: block;
     margin: 10px auto;
+    width: 60%;
+    height: auto;
+}
+.player-load-container{
+    display: flex;
+    justify-content: space-evenly;
+}
+.player-load-delete-forms{
+    flex: 1 ;
+    padding: 20px;
+}
+
+#player-display-container {
+    flex: 1;
+    border: 2px black solid;
+    border-radius: 5px;
+    padding: 20px;
 }

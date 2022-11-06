@@ -7,12 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="icon" type="image/x-icon" href="./img/favicon.png">
     <title>🏆 Torneo de penales 🏆</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="main-wrapper col-xs-10">
+
         <div class="jumbotron">
             <h1 class="display-4">Bienvenido al pateapenales!</h1>
             <p class="lead">A pocas semanas de Qatar estamos ansiosos de futbol, con esto por ahí sacies tu hambre de
@@ -22,11 +24,58 @@
             <h2 class="display-7">A darle átomos!</h2>
             <p>Para ser el campeón indiscutido, marca al menos 4 goles</p>
             <p>⚽ ⚽ ⚽ ⚽ ⚽ </p>
-            <button class="boton-jugar btn btn-outline-primary" onclick="jugar()">Para comenzar apretame</button>
+            <button class="boton btn btn-outline-primary" onclick="jugar()">Para comenzar apretame</button>
+            <a class="boton boton-jugadores btn btn-outline-primary" href="#player-form"> Cargar jugadores </a>
+
 
         </div>
 
-        <img class="img-goal" src="./goal.jpg" alt="arco de fútbol">
+        <!-- <img class="img-goal" src="./img/goal.jpg" alt="arco de fútbol"> -->
+
+        <h3>Armá tu dream team acá 👇</h3>
+
+        <div class="player-load-container">
+
+            <div class="player-load-delete-forms">
+
+                <form id="player-form">
+                    <h3>Cargar jugadores</h3>
+                    <div class="form-group">
+                        <label for="nombre-player">Nombre</label>
+                        <input type="text" class="form-control" id="player-first-name" placeholder="Ingrese el nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Apellido</label>
+                        <input type="text" class="form-control" id="player-last-name" placeholder="Ingrese el apellido">
+                    </div>
+                    <div class="form-check">
+                        <label for="shirt-number">Numero de Camiseta</label>
+                        <input type="number" class="form-control" maxlength="2" id="player-shirt-number"
+                            placeholder="Numero de camiseta">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="player-submit">Añadir</button>
+                </form>
+
+                <form id="player-delete">
+                    <h3>Eliminar jugadores</h3>
+                    <div class="form-check">
+                        <label for="shirt-number">Numero de Camiseta</label>
+                        <input type="number" class="form-control" maxlength="2" id="player-shirt-number"
+                            placeholder="Numero de camiseta">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="player-submit">Eliminar</button>
+                </form>
+
+            </div>
+
+            <div id="player-display-container">
+                <h3>Plantel</h3>
+                <div id="player-list">
+                </div>
+            </div>
+
+        </div>
+
     </div>
     <script src="./script.js"></script>
 </body>
