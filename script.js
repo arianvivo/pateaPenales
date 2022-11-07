@@ -84,44 +84,52 @@ const anotador = (intento, resultado) => {
     tableroResultado += str
 }
 
+
+
 const jugar = () => {
-    console.log("-- Comienzo del juego --")
-    alert("Bienvenido al pateapenales! \n Debe anotar al menos 4 goles para ser el campeón!\n Para patear o atajar, ingrese un número del 1 al 5 \n Quién ganará?")
     
-    while (intentos < 5){
-        intentos += 1
-        console.log("Intento n° " + intentos)
-        patada = patear()
-        switch (patada) {
-            case "gol":
-            resultado += 1
-            anotador(intentos, "gol")
-            break
-            case "atajo":
-            anotador(intentos, "atajo")
-            break
-            case "salir":
-            intentos = 6
-            alert("adiós!")
-            console.log("-- Juego cancelado --")
-            break
-        }
-        if (intentos < 5){
-            alert ("Resultado parcial:\n" + tableroResultado)
-        } else if (intentos === 5) {
-            mensajeFinal="Fin del juego! Resultado:\n" + tableroResultado  
-            if (resultado > 3) {
-                mensajeFinal += "\n 🏆 Ganador! 🏆"
-            } else {
-                mensajeFinal += "\n Perdedor!"
+    if (jugadores.length < 5) {
+        alert("Debe completar el plantel antes de comezar el juego!")
+        
+    } else {
+        console.log("-- Comienzo del juego --")
+        alert("Bienvenido al pateapenales! \n Debe anotar al menos 4 goles para ser el campeón!\n Para patear o atajar, ingrese un número del 1 al 5 \n Quién ganará?")
+        
+        while (intentos < 5){
+            intentos += 1
+            console.log("Intento n° " + intentos)
+            patada = patear()
+            switch (patada) {
+                case "gol":
+                resultado += 1
+                anotador(intentos, "gol")
+                break
+                case "atajo":
+                anotador(intentos, "atajo")
+                break
+                case "salir":
+                intentos = 6
+                alert("adiós!")
+                console.log("-- Juego cancelado --")
+                break
             }
-            alert(mensajeFinal)
-            console.log("-- Fin del juego --")
+            if (intentos < 5){
+                alert ("Resultado parcial:\n" + tableroResultado)
+            } else if (intentos === 5) {
+                mensajeFinal="Fin del juego! Resultado:\n" + tableroResultado  
+                if (resultado > 3) {
+                    mensajeFinal += "\n 🏆 Ganador! 🏆"
+                } else {
+                    mensajeFinal += "\n Perdedor!"
+                }
+                alert(mensajeFinal)
+                console.log("-- Fin del juego --")
+            }
         }
+        alert("Excelente juego! Pero todavía falta para Qatar...\n Mientras podes jugar de nuevo!")
+        
+        reiniciarPuntajes()
     }
-    alert("Excelente juego! Pero todavía falta para Qatar...\n Mientras podes jugar de nuevo!")
-    
-    reiniciarPuntajes()
 }
 
 const chequearNombre = (nombre) => {
