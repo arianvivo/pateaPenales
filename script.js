@@ -4,26 +4,19 @@ let resultado = 0
 let intentos = 0
 let tableroResultado = ""
 let jugadores = []
-//#region equipos
 
-//FIXME: Implementar con clases?
+let jugadoresPorDefecto = [
+    { nombre: "Lionel", apellido: "Messi", camiseta: 10},
+    { nombre: "Julián", apellido: "Alvarez", camiseta: 9 },
+    { nombre: "Lautaro", apellido: "Martinez", camiseta: 22 },
+    { nombre: "Joaquín", apellido: "Correa", camiseta: 17 },
+    { nombre: "Ángel", apellido: "Di María", camiseta: 11}
+]
 
-// let equipo = new Object();
-// equipo = {
-
-//     nombre: "nombre",
-//     jugadores: [
-//         "uno",
-//         "dos",
-//         "tres",
-//         "cuatro",
-//         "cinco"
-//     ]
-// }
-
-
-//#endregion
-
+window.addEventListener('load', () => {
+    jugadores = jugadoresPorDefecto
+    cargarListaPlantel(jugadores);
+});
 
 const reiniciarPuntajes = () => {
     zonaElegida = 0
@@ -147,7 +140,7 @@ const chequearCamiseta = (camiseta) => {
     if ((Number.isInteger(Number(camiseta))) && Number(camiseta) >= 1 && Number(camiseta) <= 99 ){
         return true
     } else {
-        alert("Sólo ingresar números entre 1 y 99")
+        
         return false
     }
 }
@@ -155,19 +148,24 @@ const chequearCamiseta = (camiseta) => {
 // Chequea si existe el jugador:
 //     Si alguien ya tiene esa n° de camiseta
 //     Si hay alguien con el mismo nombre y apellido (permite personas con mismo apellido pero distinto nombre)
-const jugadorExiste = (firstName, lastName, shirtNumber, jugadores) => {
-    console.log("Chequeando existencia...")
+const camisetaEnUso = (shirtNumber, jugadores) => {
+    console.log("Chequeando si la camiseta está en uso...")
     for (let jugador of jugadores){
-        if (shirtNumber === jugador.camiseta){
-            console.log("Camiseta ocupada!")
-            alert("Camiseta ocupada!")
+        if (Number(shirtNumber) === jugador.camiseta){
+            console.log("Camiseta en uso!")
             return true
         }
+    }
+}
+
+const jugadorExiste = (firstName, lastName, jugadores) => {
+    console.log("Chequeando existencia...")
+    for (let jugador of jugadores){
+        
         if (lastName === jugador.apellido){
             console.log("Info: apellido repetido. Chequeando nombre...")
             if (firstName === jugador.nombre){
                 console.log("Nombre repetido. Jugador duplicado!")
-                alert("Ya existe ese jugador!")
                 return true
             }
         }
@@ -176,32 +174,97 @@ const jugadorExiste = (firstName, lastName, shirtNumber, jugadores) => {
     return false
 }
 
+const limpiarControles = () => {
+    document.getElementById("player-first-name").value = ""
+    document.getElementById("player-last-name").value = ""
+    document.getElementById("player-shirt-number").value = ""
+}
+
 const cargarJugadores = () => {
     console.log("=== Comienzo carga de jugadores! ===")
-    let firstName = document.getElementById("player-first-name").value
-    let lastName = document.getElementById("player-last-name").value
-    let shirtNumber = document.getElementById("player-shirt-number").value
-    
-    if (chequearNombre(firstName.value) && chequearNombre(lastName) && chequearCamiseta(shirtNumber) && !jugadorExiste(firstName,lastName,shirtNumber,jugadores)){
-        console.log("=== Controles exitosos ===")
-        let newPlayer = {
-            nombre: firstName,
-            apellido: lastName,
-            camiseta: shirtNumber
+    if (jugadores.length === 5){
+        console.log("Plantel lleno")
+        alert("El plantel está lleno! Elimine un jugador para cargar otro.")
+    } else {
+        let firstName = document.getElementById("player-first-name").value
+        let lastName = document.getElementById("player-last-name").value
+        let shirtNumber = document.getElementById("player-shirt-number").value
+        
+        if (!chequearNombre(firstName)){
+            document.getElementById("player-first-name").value = ""
+            
+        } else if (!chequearNombre(lastName)){
+            document.getElementById("player-last-name").value = ""
+        } else if (!chequearCamiseta(shirtNumber)){
+            alert("Sólo ingresar números de camiseta entre entre 1 y 99")
+        } else if (camisetaEnUso(shirtNumber,jugadores)){
+            alert("Camiseta ocupada!")
+        } else if (jugadorExiste(firstName,lastName,jugadores)){
+            alert("Ya existe ese jugador!")
+        } else {
+            console.log("=== Controles exitosos ===")
+            let newPlayer = {
+                nombre: firstName,
+                apellido: lastName,
+                camiseta: parseInt(shirtNumber)
+            }
+            console.log(newPlayer)
+            jugadores.push(newPlayer)
+            cargarListaPlantel(jugadores)
+            limpiarControles()
         }
-        console.log(newPlayer)
-        jugadores.push(newPlayer)
-        cargarListaPlantel(newPlayer)
     }
     console.log("=== Fin carga de jugadores ===")
 }
 
-const cargarListaPlantel = (newPlayer) => {
+const cargarListaPlantel = (jugadores) => {
     let plantel = document.getElementById("player-list")
-    let parrafoNewPlayer = document.createElement("p")
-    parrafoNewPlayer.innerText = newPlayer.nombre + " " + newPlayer.apellido +  " -> N° " + newPlayer.camiseta
-    plantel.appendChild(parrafoNewPlayer)
+    plantel.innerHTML = ""
+    for (jugador of jugadores){
+        let parrafoNewPlayer = document.createElement("p")
+        parrafoNewPlayer.innerText = jugador.nombre + " " + jugador.apellido +  " -> N° " + jugador.camiseta
+        plantel.appendChild(parrafoNewPlayer)
+    }
 }
+
+const borrarJugador = () => {
+    console.log("=== Comienzo de borrado ===")
+    let shirtNumber = document.getElementById("delete-shirt-number").value
+    console.log("ShirtNumber: " +shirtNumber)
+    
+    if (!chequearCamiseta(shirtNumber)){
+        alert("Sólo ingresar números de camiseta entre 1 y 99")
+        
+    }else if (!camisetaEnUso(shirtNumber, jugadores)){
+        console.log("=== Jugador no encontrado! ===")
+        alert("No existe ese jugador!")
+        
+    } else {
+        console.log("=== Jugador encontrado! ===")
+        const indice = jugadores.findIndex(object => object.camiseta === Number(shirtNumber))
+        jugadores.splice(indice, 1)
+        cargarListaPlantel(jugadores)
+        console.log("=== Borrado exitoso! ===")
+        document.getElementById("delete-shirt-number").value = ""
+    }
+}
+
+const borrarTodo = () => {
+    if (confirm("Esta seguro que desea borrar todo el plantel?")){
+        jugadores.splice(0, jugadores.length)
+        cargarListaPlantel(jugadores)
+    }
+}
+
+
+let startSubmit = document.getElementById("start-play")
+startSubmit.addEventListener("click", jugar)
 
 let playerSubmit = document.getElementById("player-submit")
 playerSubmit.addEventListener("click",cargarJugadores)
+
+let deleteSubmit = document.getElementById("player-delete-submit")
+deleteSubmit.addEventListener("click",borrarJugador)
+
+let deleteAllSubmit = document.getElementById("delete-all-submit")
+deleteAllSubmit.addEventListener("click", borrarTodo)

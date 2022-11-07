@@ -24,22 +24,21 @@
             <h2 class="display-7">A darle átomos!</h2>
             <p>Para ser el campeón indiscutido, marca al menos 4 goles</p>
             <p>⚽ ⚽ ⚽ ⚽ ⚽ </p>
-            <button class="boton btn btn-outline-primary" onclick="jugar()">Para comenzar apretame</button>
+            <button class="boton btn btn-outline-primary" id="start-play">Para comenzar apretame</button>
             <a class="boton boton-jugadores btn btn-outline-primary" href="#player-form"> Cargar jugadores </a>
 
 
         </div>
 
-        <!-- <img class="img-goal" src="./img/goal.jpg" alt="arco de fútbol"> -->
+        <img class="img-goal" src="./img/goal.jpg" alt="arco de fútbol">
 
         <h3>Armá tu dream team acá 👇</h3>
 
         <div class="player-load-container">
 
             <div class="player-load-delete-forms">
-
+                <h3>Cargar jugadores</h3>
                 <form id="player-form">
-                    <h3>Cargar jugadores</h3>
                     <div class="form-group">
                         <label for="nombre-player">Nombre</label>
                         <input type="text" class="form-control" id="player-first-name" placeholder="Ingrese el nombre">
@@ -49,7 +48,7 @@
                         <input type="text" class="form-control" id="player-last-name" placeholder="Ingrese el apellido">
                     </div>
                     <div class="form-check">
-                        <label for="shirt-number">Numero de Camiseta</label>
+                        <label for="player-shirt-number">Numero de Camiseta</label>
                         <input type="number" class="form-control" maxlength="2" id="player-shirt-number"
                             placeholder="Numero de camiseta">
                     </div>
@@ -59,11 +58,12 @@
                 <form id="player-delete">
                     <h3>Eliminar jugadores</h3>
                     <div class="form-check">
-                        <label for="shirt-number">Numero de Camiseta</label>
-                        <input type="number" class="form-control" maxlength="2" id="player-shirt-number"
+                        <label for="delete-shirt-number">Numero de Camiseta</label>
+                        <input type="number" class="form-control" maxlength="2" id="delete-shirt-number"
                             placeholder="Numero de camiseta">
                     </div>
-                    <button type="button" class="btn btn-primary" id="player-submit">Eliminar</button>
+                    <button type="button" class="btn btn-primary" id="player-delete-submit">Eliminar</button>
+                    <button type="button" class="btn btn-primary" id="delete-all-submit">Eliminar Todos</button>
                 </form>
 
             </div>
