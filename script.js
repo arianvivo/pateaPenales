@@ -41,7 +41,8 @@ const esGol = (zonaElegida) => {
 function patear() {
     //Devuelve una cadena dependiendo la elección del jugador
     while (true) {
-        let ingreso = prompt(" INTENTO N° " + intentos + "\nIngrese a dónde quiere patear... \n Puede tomar la imagen de referencia! \n cancelar para salir ")
+        index = intentos -1
+        let ingreso = prompt(" INTENTO N° " + intentos + "\nEjecuta " + jugadores[index].nombre + " " + jugadores[index].apellido + " con la casaca n° " + jugadores[index].camiseta + "\nIngrese a dónde quiere patear... \n Puede tomar la imagen de referencia! \n cancelar para salir ")
         if (ingreso === null) {
             return "salir"
         }
@@ -53,7 +54,7 @@ function patear() {
             alert("Ingreso inválido! Intente nuevamente...")
         } else {
             // zonaElegida = ingreso
-            let mensajePenal = "Se prepara el jugador...\n"
+            let mensajePenal = "Se prepara "+ jugadores[index].apellido + " ...\n"
             if (ingreso === 1) {
                 mensajePenal += "Patea al mediooo... \n"
             } else if (ingreso % 2 === 0) {
