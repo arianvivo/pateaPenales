@@ -2,6 +2,9 @@
     margin: 0;
     padding: 0;
 }
+body {
+    background-color: rgb(54, 54, 54);
+}
 .boton {
     height: 80px;
     width: 160px;
@@ -21,6 +24,14 @@
     text-align: center;
 }
 
+.team-container{
+    display: flex;
+}
+
+.team-container .card {
+    width: 18rem;
+}
+
 .img-goal {
     display: block;
     margin: 10px auto;
@@ -30,7 +41,11 @@
 
 .player-load-container{
     display: flex;
+    flex-direction: column;
     justify-content: space-evenly;
+}
+#player-form {
+    display: flex;
 }
 
 .player-load-delete-forms{

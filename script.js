@@ -6,15 +6,15 @@ let tableroResultado = ""
 let jugadores = []
 
 let jugadoresPorDefecto = [
-    { nombre: "Lionel", apellido: "Messi", camiseta: 10},
-    { nombre: "Julián", apellido: "Alvarez", camiseta: 9 },
-    { nombre: "Lautaro", apellido: "Martinez", camiseta: 22 },
-    { nombre: "Joaquín", apellido: "Correa", camiseta: 17 },
-    { nombre: "Ángel", apellido: "Di María", camiseta: 11}
+    { nombre: "Lionel", apellido: "Messi", camiseta: 10, custom: false},
+    { nombre: "Julián", apellido: "Alvarez", camiseta: 9, custom: false },
+    { nombre: "Lautaro", apellido: "Martinez", camiseta: 22, custom: false },
+    { nombre: "Joaquín", apellido: "Correa", camiseta: 17, custom: false },
+    { nombre: "Ángel", apellido: "Di Maria", camiseta: 11, custom: false}
 ]
 
 window.addEventListener('load', () => {
-    jugadores = jugadoresPorDefecto
+    jugadores = jugadoresPorDefecto.slice()
     cargarListaPlantel(jugadores);
 });
 
@@ -215,7 +215,8 @@ const cargarJugadores = () => {
             let newPlayer = {
                 nombre: firstName,
                 apellido: lastName,
-                camiseta: parseInt(shirtNumber)
+                camiseta: parseInt(shirtNumber),
+                custom: true
             }
             console.log(newPlayer)
             jugadores.push(newPlayer)
@@ -226,37 +227,81 @@ const cargarJugadores = () => {
     console.log("=== Fin carga de jugadores ===")
 }
 
+// const cargarListaPlantel = (jugadores) => {
+//     let plantel = document.getElementById("player-list")
+//     plantel.innerHTML = ""
+//     for (jugador of jugadores){
+//         let parrafoNewPlayer = document.createElement("p")
+//         parrafoNewPlayer.innerText = jugador.nombre + " " + jugador.apellido +  " -> N° " + jugador.camiseta
+//         plantel.appendChild(parrafoNewPlayer)
+//     }
+// }
+
 const cargarListaPlantel = (jugadores) => {
-    let plantel = document.getElementById("player-list")
+    
+    let plantel = document.getElementById("team-container")
     plantel.innerHTML = ""
-    for (jugador of jugadores){
-        let parrafoNewPlayer = document.createElement("p")
-        parrafoNewPlayer.innerText = jugador.nombre + " " + jugador.apellido +  " -> N° " + jugador.camiseta
-        plantel.appendChild(parrafoNewPlayer)
-    }
+    jugadores.forEach( jugador => {
+        let playerCard = document.createElement("div")
+        playerCard.className = "card"
+        portrait = jugador.custom ? "dummy" : jugador.apellido
+        playerCard.innerHTML = `
+        <img class="card-img-top" src="./img/players/${portrait}.jpg" alt="${jugador.apellido}">
+        <div class="card-body">
+        <h5 class="card-title">${jugador.nombre} ${jugador.apellido}</h5>
+        <p class="card-text"> Camiseta n°${jugador.camiseta}</p>
+        <button class="boton btn btn-outline-primary delete-player" onclick="borrarJugador(${jugador.camiseta})">Eliminar</button>
+        </div>`
+        plantel.append(playerCard)
+    });
+    
 }
 
-const borrarJugador = () => {
+// const borrarJugador = () => {
+//     console.log("=== Comienzo de borrado ===")
+//     let shirtNumber = document.getElementById("delete-shirt-number").value
+//     console.log("ShirtNumber: " +shirtNumber)
+
+//     if (!chequearCamiseta(shirtNumber)){
+//         alert("Sólo ingresar números de camiseta entre 1 y 99")
+
+//     }else if (!camisetaEnUso(shirtNumber, jugadores)){
+//         console.log("=== Jugador no encontrado! ===")
+//         alert("No existe ese jugador!")
+
+//     } else {
+//         console.log("=== Jugador encontrado! ===")
+//         const indice = jugadores.findIndex(object => object.camiseta === Number(shirtNumber))
+//         jugadores.splice(indice, 1)
+//         cargarListaPlantel(jugadores)
+//         console.log("=== Borrado exitoso! ===")
+//         document.getElementById("delete-shirt-number").value = ""
+//     }
+// }
+
+const borrarJugador = (jugadorCamiseta) => {
     console.log("=== Comienzo de borrado ===")
-    let shirtNumber = document.getElementById("delete-shirt-number").value
-    console.log("ShirtNumber: " +shirtNumber)
+    // let shirtNumber = document.getElementById("delete-shirt-number").value
+    console.log("ShirtNumber: " +jugadorCamiseta)
     
-    if (!chequearCamiseta(shirtNumber)){
-        alert("Sólo ingresar números de camiseta entre 1 y 99")
-        
-    }else if (!camisetaEnUso(shirtNumber, jugadores)){
-        console.log("=== Jugador no encontrado! ===")
-        alert("No existe ese jugador!")
-        
-    } else {
-        console.log("=== Jugador encontrado! ===")
-        const indice = jugadores.findIndex(object => object.camiseta === Number(shirtNumber))
-        jugadores.splice(indice, 1)
-        cargarListaPlantel(jugadores)
-        console.log("=== Borrado exitoso! ===")
-        document.getElementById("delete-shirt-number").value = ""
-    }
+    // if (!chequearCamiseta(shirtNumber)){
+    //     alert("Sólo ingresar números de camiseta entre 1 y 99")
+    
+    // }else if (!camisetaEnUso(shirtNumber, jugadores)){
+    //     console.log("=== Jugador no encontrado! ===")
+    //     alert("No existe ese jugador!")
+    
+    // } else {
+    // console.log("=== Jugador encontrado! ===")
+    const indice = jugadores.findIndex(object => object.camiseta === Number(jugadorCamiseta))
+    jugadores.splice(indice, 1)
+    cargarListaPlantel(jugadores)
+    console.log("=== Borrado exitoso! ===")
+    // document.getElementById("delete-shirt-number").value = ""
+    // }
 }
+
+
 
 const borrarTodo = () => {
     if (confirm("Esta seguro que desea borrar todo el plantel?")){
@@ -265,6 +310,18 @@ const borrarTodo = () => {
     }
 }
 
+const cargarDefault = () => {
+    if (confirm("Está seguro de que desea cargar los valores por defecto?")){
+        jugadores.splice(0, jugadores.length)
+        console.log(jugadoresPorDefecto)
+        jugadores = jugadoresPorDefecto.slice()
+        console.log(jugadores)
+        cargarListaPlantel(jugadores);
+    }
+}
+
+// let borrarJugadorButton = document.getElementsByClassName("delete-player")
+// borrarJugadorButton.addEventListener("click", borrarJugador(borrarJugadorButton))
 
 let startSubmit = document.getElementById("start-play")
 startSubmit.addEventListener("click", jugar)
@@ -277,3 +334,6 @@ deleteSubmit.addEventListener("click",borrarJugador)
 
 let deleteAllSubmit = document.getElementById("delete-all-submit")
 deleteAllSubmit.addEventListener("click", borrarTodo)
+
+let loadDefaultSubmit = document.getElementById("load-default-submit")
+loadDefaultSubmit.addEventListener("click", cargarDefault)
