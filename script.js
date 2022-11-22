@@ -14,8 +14,15 @@ let jugadoresPorDefecto = [
 ]
 
 window.addEventListener('load', () => {
-    jugadores = jugadoresPorDefecto.slice()
+    if (localStorage.getItem("savedPlayers") == null) {
+        jugadores = jugadoresPorDefecto.slice()
+    } else {
+        let savedContent = localStorage.getItem("savedPlayers")
+        jugadores = JSON.parse(savedContent)
+    }
     cargarListaPlantel(jugadores);
+    console.log("Jugadores:")
+    console.log(jugadores)
 });
 
 const reiniciarPuntajes = () => {
@@ -38,40 +45,61 @@ const esGol = (zonaElegida) => {
     return true
 }
 
-function patear() {
-    //Devuelve una cadena dependiendo la elección del jugador
-    while (true) {
-        index = intentos -1
-        let ingreso = prompt(" INTENTO N° " + intentos + "\nEjecuta " + jugadores[index].nombre + " " + jugadores[index].apellido + " con la casaca n° " + jugadores[index].camiseta + "\nIngrese a dónde quiere patear... \n Puede tomar la imagen de referencia! \n cancelar para salir ")
-        if (ingreso === null) {
-            return "salir"
+
+function patear(ingreso) {
+    console.log("=== COMIENZO DE PATADA ===")
+    console.log("kickbuttons:" + kickButtons)
+    
+    for (let kb of kickButtons){
+        kb.style.visibility = "hidden"
+    }
+    
+    intentos++
+    console.log("Se pateó a " + ingreso)
+    console.log("intentos:" + intentos)
+    let index = intentos - 1
+    console.log("index :" + index)
+    let messageWindow = document.createElement("div")
+    messageWindow.className="message-window"    
+    messageWindow.innerHTML = `
+    <h3>INTENTO N° ${intentos}</h3><p>Ejecuta ${jugadores[index].nombre} ${jugadores[index].apellido}</p><p>con la casaca n°  ${jugadores[index].camiseta}</p>
+    `
+    playArea.appendChild(messageWindow)
+    
+    let mensajePenal = "<p>Se prepara "+ jugadores[index].apellido + " ...</p>"
+    if (ingreso === 1) {
+        mensajePenal += "<p>Patea al mediooo...</p>"
+    } else if (ingreso % 2 === 0) {
+        mensajePenal += "<p>Patea abajooo...</p>"
+    } else {
+        mensajePenal += "<p>Dispara al angulooo....</p>"
+    }
+    if (esGol(ingreso)) {
+        mensajePenal += "</p>GOOOOOOOL!</p>"
+    } else {
+        mensajePenal += "</p>ATAJÓ EL ARQUERO!</p>"
+    }
+    setTimeout( () => {
+        messageWindow.innerHTML = `<p>${mensajePenal}</p>`
+    } , 3000)
+    setTimeout( () => {
+        messageWindow.remove()
+        for (let kb of kickButtons) {
+            kb.style.visibility = "visible"
         }
-        if (isNaN(ingreso)) {
-            alert("Debe ingresar sólo números! Intente nuevamente...")
-        } else if (!Number.isInteger(Number(ingreso))) {
-            alert("Debe ingresar sólo números enteros! Intente nuevamente...")
-        } else if (ingreso < 1 || ingreso > 5) {
-            alert("Ingreso inválido! Intente nuevamente...")
-        } else {
-            // zonaElegida = ingreso
-            let mensajePenal = "Se prepara "+ jugadores[index].apellido + " ...\n"
-            if (ingreso === 1) {
-                mensajePenal += "Patea al mediooo... \n"
-            } else if (ingreso % 2 === 0) {
-                mensajePenal += "Patea abajooo...\n"
-            } else {
-                mensajePenal += "Dispara al angulooo....\n"
-            }
-            
-            if (esGol(ingreso)) {
-                alert(mensajePenal + "GOOOOOOOL!")
-                return "gol"
-            } else {
-                alert(mensajePenal + "ATAJÓ EL ARQUERO!")
-                return "atajo"
-            }
+        if (intentos === 5 ){
+            terminarPartida()
         }
     }
+    , 6000)
+}
+
+
+
+const terminarPartida = () => {
+    alert("Excelente juego! Pero todavía falta para Qatar...\n Mientras podes jugar de nuevo!")
+    reiniciarPuntajes()
+    playArea.style.display = "none";
 }
 
 const anotador = (intento, resultado) => {
@@ -84,8 +112,6 @@ const anotador = (intento, resultado) => {
     tableroResultado += str
 }
 
-
-
 const jugar = () => {
     
     if (jugadores.length < 5) {
@@ -95,40 +121,20 @@ const jugar = () => {
         console.log("-- Comienzo del juego --")
         alert("Bienvenido al pateapenales! \n Debe anotar al menos 4 goles para ser el campeón!\n Para patear o atajar, ingrese un número del 1 al 5 \n Quién ganará?")
         
-        while (intentos < 5){
-            intentos += 1
-            console.log("Intento n° " + intentos)
-            patada = patear()
-            switch (patada) {
-                case "gol":
-                resultado += 1
-                anotador(intentos, "gol")
-                break
-                case "atajo":
-                anotador(intentos, "atajo")
-                break
-                case "salir":
-                intentos = 6
-                alert("adiós!")
-                console.log("-- Juego cancelado --")
-                break
-            }
-            if (intentos < 5){
-                alert ("Resultado parcial:\n" + tableroResultado)
-            } else if (intentos === 5) {
-                mensajeFinal="Fin del juego! Resultado:\n" + tableroResultado  
-                if (resultado > 3) {
-                    mensajeFinal += "\n 🏆 Ganador! 🏆"
-                } else {
-                    mensajeFinal += "\n Perdedor!"
-                }
-                alert(mensajeFinal)
-                console.log("-- Fin del juego --")
-            }
-        }
-        alert("Excelente juego! Pero todavía falta para Qatar...\n Mientras podes jugar de nuevo!")
+        playArea.style.display = "block"
         
-        reiniciarPuntajes()
+        let middleKick = document.getElementById("middle-kick")
+        middleKick.addEventListener("click",  () => { patear(1)})
+        let bottomLeftKick = document.getElementById("bottom-left-kick")
+        bottomLeftKick.addEventListener("click", () => { patear(2)})
+        let topLeftKick = document.getElementById("top-left-kick")
+        topLeftKick.addEventListener("click", () => { patear(3)})
+        let bottomRightKick = document.getElementById("bottom-right-kick")
+        bottomRightKick.addEventListener("click", () => { patear(4)})
+        let topRightKick = document.getElementById("top-right-kick")
+        topRightKick.addEventListener("click", () => { patear(5)})
+        
+        
     }
 }
 
@@ -227,16 +233,6 @@ const cargarJugadores = () => {
     console.log("=== Fin carga de jugadores ===")
 }
 
-// const cargarListaPlantel = (jugadores) => {
-//     let plantel = document.getElementById("player-list")
-//     plantel.innerHTML = ""
-//     for (jugador of jugadores){
-//         let parrafoNewPlayer = document.createElement("p")
-//         parrafoNewPlayer.innerText = jugador.nombre + " " + jugador.apellido +  " -> N° " + jugador.camiseta
-//         plantel.appendChild(parrafoNewPlayer)
-//     }
-// }
-
 const cargarListaPlantel = (jugadores) => {
     
     let plantel = document.getElementById("team-container")
@@ -255,50 +251,19 @@ const cargarListaPlantel = (jugadores) => {
         plantel.append(playerCard)
     });
     
+    let JSONJugadores = JSON.stringify(jugadores)
+    localStorage.setItem("savedPlayers", JSONJugadores)
+    
 }
-
-// const borrarJugador = () => {
-//     console.log("=== Comienzo de borrado ===")
-//     let shirtNumber = document.getElementById("delete-shirt-number").value
-//     console.log("ShirtNumber: " +shirtNumber)
-
-//     if (!chequearCamiseta(shirtNumber)){
-//         alert("Sólo ingresar números de camiseta entre 1 y 99")
-
-//     }else if (!camisetaEnUso(shirtNumber, jugadores)){
-//         console.log("=== Jugador no encontrado! ===")
-//         alert("No existe ese jugador!")
-
-//     } else {
-//         console.log("=== Jugador encontrado! ===")
-//         const indice = jugadores.findIndex(object => object.camiseta === Number(shirtNumber))
-//         jugadores.splice(indice, 1)
-//         cargarListaPlantel(jugadores)
-//         console.log("=== Borrado exitoso! ===")
-//         document.getElementById("delete-shirt-number").value = ""
-//     }
-// }
 
 const borrarJugador = (jugadorCamiseta) => {
     console.log("=== Comienzo de borrado ===")
-    // let shirtNumber = document.getElementById("delete-shirt-number").value
     console.log("ShirtNumber: " +jugadorCamiseta)
     
-    // if (!chequearCamiseta(shirtNumber)){
-    //     alert("Sólo ingresar números de camiseta entre 1 y 99")
-    
-    // }else if (!camisetaEnUso(shirtNumber, jugadores)){
-    //     console.log("=== Jugador no encontrado! ===")
-    //     alert("No existe ese jugador!")
-    
-    // } else {
-    // console.log("=== Jugador encontrado! ===")
     const indice = jugadores.findIndex(object => object.camiseta === Number(jugadorCamiseta))
     jugadores.splice(indice, 1)
     cargarListaPlantel(jugadores)
     console.log("=== Borrado exitoso! ===")
-    // document.getElementById("delete-shirt-number").value = ""
-    // }
 }
 
 
@@ -313,15 +278,14 @@ const borrarTodo = () => {
 const cargarDefault = () => {
     if (confirm("Está seguro de que desea cargar los valores por defecto?")){
         jugadores.splice(0, jugadores.length)
-        console.log(jugadoresPorDefecto)
         jugadores = jugadoresPorDefecto.slice()
-        console.log(jugadores)
         cargarListaPlantel(jugadores);
     }
 }
 
-// let borrarJugadorButton = document.getElementsByClassName("delete-player")
-// borrarJugadorButton.addEventListener("click", borrarJugador(borrarJugadorButton))
+let playArea = document.getElementById("play-area")
+
+let kickButtons = document.getElementById("play-area").children
 
 let startSubmit = document.getElementById("start-play")
 startSubmit.addEventListener("click", jugar)
@@ -337,3 +301,4 @@ deleteAllSubmit.addEventListener("click", borrarTodo)
 
 let loadDefaultSubmit = document.getElementById("load-default-submit")
 loadDefaultSubmit.addEventListener("click", cargarDefault)
+

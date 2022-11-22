@@ -3,7 +3,7 @@
     padding: 0;
 }
 body {
-    background-color: rgb(54, 54, 54);
+    /* background-color: rgb(54, 54, 54); */
 }
 .boton {
     height: 80px;
@@ -72,4 +72,61 @@ body {
 
 #player-list > p {
     font-size: 1.5em;
+}
+
+#play-area {
+    display: none;
+    margin: auto;
+    width: 977px;
+    height: 648px;
+    background-image: url(./img/goal.jpg);
+}
+
+#play-area .kick {
+    height: 80px;
+    width: 80px;
+    font-size: 30pt;
+    background: none;
+    border: none;
+
+}
+
+#play-area .kick:hover {
+    background-color: rgba(230, 247, 139, 09);
+}
+
+#top-left-kick {
+    position: relative;
+    top: 230px;
+    right: 120px;
+}
+
+#top-right-kick {
+    position: relative;
+    top: 230px;
+    left: 320px;
+}
+
+#middle-kick {
+    position: relative;
+    top: 320px;
+}
+
+#bottom-left-kick {
+    position: relative;
+    top: 400px;
+    right: 380px;
+}
+
+#bottom-right-kick {
+    position: relative;
+    top: 400px;
+    left: 75px;
+}
+
+.message-window {
+    margin: auto;
+    width: 90%;
+    height: 90%;
+    background-color: rgba(255, 255, 255, 0.7);
 }
