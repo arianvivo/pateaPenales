@@ -115,12 +115,12 @@ const terminarPartida = () => {
     for (let kb of kickButtons){
         kb.style.visibility = "visible"
     }
+    startSubmit.style.visibility = "hidden"
 
     Swal.fire({
         title: 'Fin de la partida!',
         html: tableroResultado,
         iconHtml: '<img src="./img/world-cup.png">',
-        // imageSize: '80x80',
         customClass: {
             icon: "no-border"
         }
@@ -129,6 +129,23 @@ const terminarPartida = () => {
     playArea.style.display = "none";
 }
 
+const abortPlay = () => {
+    for(let btn of deleteButtons) {
+        btn.style.visibility = "visible"
+    }
+    for (let kb of kickButtons){
+        kb.style.visibility = "visible"
+    }
+    startSubmit.style.visibility = "visible"
+    endSubmit.style.visibility = "hidden"
+    reiniciarPuntajes()
+    playArea.style.display = "none";
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Partida finalizada!',
+      })
+}
 const anotador = (intento, resultado) => {
     str= `<p> Penal n° " ${intento}: `
     resultado ? str += "Gol ! ✔️" : str+= "Atajado ! ❌"
@@ -148,11 +165,13 @@ const jugar = () => {
         for(let btn of deleteButtons) {
             btn.style.visibility = "hidden"
         }
+
+        startSubmit.style.visibility = "hidden"
+        endSubmit.style.visibility = "visible"
         Swal.fire({
             title: 'Bienvenido al pateapenales!',
             text: 'Debe anotar al menos 4 goles para ser el campeón',
             iconHtml: '<img src="./img/world-cup.png">',
-            imageSize: '80x80',
             customClass: {
                 icon: "no-border"
             }
@@ -328,6 +347,9 @@ let kickButtons = document.getElementById("play-area").children
 
 let startSubmit = document.getElementById("start-play")
 startSubmit.addEventListener("click", jugar)
+
+let endSubmit = document.getElementById("end-play")
+endSubmit.addEventListener("click", abortPlay)
 
 let playerSubmit = document.getElementById("player-submit")
 playerSubmit.addEventListener("click",cargarJugadores)

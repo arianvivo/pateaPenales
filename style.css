@@ -30,6 +30,16 @@
     width: 18rem;
 }
 
+.game-control-container {
+    display: flex;
+    justify-content: center;
+}
+
+#end-play {
+    visibility: hidden;
+}
+
+
 .img-goal {
     display: block;
     margin: 10px auto;
