@@ -51,7 +51,7 @@ const esGol = (zonaElegida) => {
 
 function patear(ingreso) {
     console.log("=== COMIENZO DE PATADA ===")
-   
+    
     for (let kb of kickButtons){
         kb.style.visibility = "hidden"
     }
@@ -90,7 +90,7 @@ function patear(ingreso) {
         } else {
             mensajePenal += "<p class=\"kick-message-keeper\">ATAJÓ EL ARQUERO!</p>"
             anotador(intentos, false)
-
+            
         }
         messageWindow.innerHTML = `${mensajePenal}`
     } , 3500)
@@ -109,7 +109,7 @@ function patear(ingreso) {
 }
 
 const terminarPartida = () => {
-
+    
     Swal.fire({
         title: 'Fin de la partida!',
         html: tableroResultado,
@@ -118,7 +118,7 @@ const terminarPartida = () => {
             icon: "no-border"
         }
     })
-
+    
     reiniciarPuntajes()
     
     for(let btn of deleteButtons) {
@@ -135,7 +135,7 @@ const terminarPartida = () => {
 
 const abortPlay = () => {
     reiniciarPuntajes()
-
+    
     for(let btn of deleteButtons) {
         btn.style.visibility = "visible"
     }
@@ -149,7 +149,7 @@ const abortPlay = () => {
         icon: 'error',
         title: 'Oops...',
         text: 'Partida finalizada!',
-      })
+    })
 }
 
 const anotador = (intento, resultado) => {
@@ -162,16 +162,21 @@ const anotador = (intento, resultado) => {
 const jugar = () => {
     
     if (jugadores.length < 5) {
-        alert("Debe completar el plantel antes de comezar el juego!")
+        // alert("Debe completar el plantel antes de comezar el juego!")
+        Swal.fire({
+            icon: 'error',
+            title: 'Hay equipo!... O no?',
+            text: 'Debe completar el plantel antes de comezar el juego!',
+        })
         
     } else {
         console.log("-- Comienzo del juego --")
-
+        
         deleteButtons = document.getElementsByClassName("delete-button")
         for(let btn of deleteButtons) {
             btn.style.visibility = "hidden"
         }
-
+        
         startSubmit.style.visibility = "hidden"
         endSubmit.style.visibility = "visible"
         Swal.fire({
@@ -191,10 +196,19 @@ const jugar = () => {
 const chequearNombre = (nombre) => {
     console.log("Chequeando " + nombre)
     if (nombre === "" ){
-        alert("No ha ingresado el nombre completo!")
+        Swal.fire({
+            icon: 'error',
+            title: 'Y vo\' quien so\'?',
+            text: 'No ha ingresado el nombre completo!',
+        })
+        
         return false
     } else if (/\d/.test(nombre)){
-        alert("El nombre/apellido no puede contener números!\n(A menos que sea el hijo de Elon Musk...)")
+        Swal.fire({
+            icon: 'error',
+            title: 'N0mbr3 1nv4lid0',
+            text: 'El nombre/apellido no puede contener números!\n(A menos que sea el hijo de Elon Musk...',
+        })
         return false
     } else {
         return true;
