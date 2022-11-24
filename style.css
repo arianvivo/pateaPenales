@@ -2,9 +2,7 @@
     margin: 0;
     padding: 0;
 }
-body {
-    /* background-color: rgb(54, 54, 54); */
-}
+
 .boton {
     height: 80px;
     width: 160px;
@@ -45,8 +43,13 @@ body {
     justify-content: space-evenly;
 }
 #player-form {
+    margin: auto;
+    width: 80%;
     display: flex;
+    justify-content: center;
 }
+
+
 
 .player-load-delete-forms{
     flex: 1 ;
@@ -74,6 +77,13 @@ body {
     font-size: 1.5em;
 }
 
+.delete-button {
+    height: 60px;
+    color: red;
+    border-color: red;
+    width: auto;
+}
+
 #play-area {
     display: none;
     margin: auto;
@@ -88,7 +98,7 @@ body {
     font-size: 30pt;
     background: none;
     border: none;
-
+    
 }
 
 #play-area .kick:hover {
@@ -125,8 +135,42 @@ body {
 }
 
 .message-window {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     margin: auto;
     width: 90%;
-    height: 90%;
+    height: 300px;
     background-color: rgba(255, 255, 255, 0.7);
+}
+
+.no-border {
+    border: 0 !important;
+}
+.kick-message-title {
+    font-weight: 600;
+    color: blue;
+}
+
+.kick-message-prelude, .kick-message-player-data, .kick-message-shirt {
+    font-weight: 600;
+}
+
+.kick-message-direction {
+    font-size: 18pt;
+    font-weight: 800;
+}
+
+.kick-message-goal {
+    font-size: 36pt;
+    color: green;
+    font-weight: 800;
+}
+
+.kick-message-keeper {
+    font-size: 36pt;
+    color: red;
+    font-weight: 800;
 }

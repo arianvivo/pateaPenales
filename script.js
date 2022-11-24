@@ -1,14 +1,16 @@
 let zonaElegida = 0
 let eleccionMaqina = 0
-let resultado = 0
+let golesAcumulados = 0
 let intentos = 0
 let tableroResultado = ""
 let jugadores = []
+let deleteButtons = []
+let messageWindow = document.object
 
 let jugadoresPorDefecto = [
     { nombre: "Lionel", apellido: "Messi", camiseta: 10, custom: false},
     { nombre: "Julián", apellido: "Alvarez", camiseta: 9, custom: false },
-    { nombre: "Lautaro", apellido: "Martinez", camiseta: 22, custom: false },
+    { nombre: "Lautaro", apellido: "Martinez", camiseta: 22, custom: false},
     { nombre: "Joaquín", apellido: "Correa", camiseta: 17, custom: false },
     { nombre: "Ángel", apellido: "Di Maria", camiseta: 11, custom: false}
 ]
@@ -59,35 +61,49 @@ function patear(ingreso) {
     console.log("intentos:" + intentos)
     let index = intentos - 1
     console.log("index :" + index)
-    let messageWindow = document.createElement("div")
+    // let 
+    messageWindow = document.createElement("div")
     messageWindow.className="message-window"    
     messageWindow.innerHTML = `
-    <h3>INTENTO N° ${intentos}</h3><p>Ejecuta ${jugadores[index].nombre} ${jugadores[index].apellido}</p><p>con la casaca n°  ${jugadores[index].camiseta}</p>
+    <h3 class=\"kick-message-title\">INTENTO N° ${intentos}</h3>
+    <p class=\"kick-message-player-data\">Ejecuta ${jugadores[index].nombre} ${jugadores[index].apellido}</p>
+    <pclass=\"kick-message-player-shirt\">con la casaca n°  ${jugadores[index].camiseta}</p>
     `
     playArea.appendChild(messageWindow)
     
-    let mensajePenal = "<p>Se prepara "+ jugadores[index].apellido + " ...</p>"
+    let mensajePenal = "<p class=\"kick-message-prelude\">Se prepara "+ jugadores[index].apellido + " ...</p>"
     if (ingreso === 1) {
-        mensajePenal += "<p>Patea al mediooo...</p>"
+        mensajePenal += "<p class=\"kick-message-direction\">Patea al mediooo...</p>"
     } else if (ingreso % 2 === 0) {
-        mensajePenal += "<p>Patea abajooo...</p>"
+        mensajePenal += "<p class=\"kick-message-direction\">Patea abajooo...</p>"
     } else {
-        mensajePenal += "<p>Dispara al angulooo....</p>"
-    }
-    if (esGol(ingreso)) {
-        mensajePenal += "</p>GOOOOOOOL!</p>"
-    } else {
-        mensajePenal += "</p>ATAJÓ EL ARQUERO!</p>"
+        mensajePenal += "<p class=\"kick-message-direction\">Dispara al angulooo....</p>"
     }
     setTimeout( () => {
-        messageWindow.innerHTML = `<p>${mensajePenal}</p>`
-    } , 3000)
+        messageWindow.innerHTML = `${mensajePenal}`
+    } , 2000)
+    
+    
+    setTimeout( () => {
+        if (esGol(ingreso)) {
+            mensajePenal += "<p class=\"kick-message-goal\">GOOOOOOOL!</p>"
+            anotador(intentos, true)
+            golesAcumulados++
+        } else {
+            mensajePenal += "<p class=\"kick-message-keeper\">ATAJÓ EL ARQUERO!</p>"
+            anotador(intentos, true)
+
+        }
+        messageWindow.innerHTML = `${mensajePenal}`
+    } , 3500)
+    
     setTimeout( () => {
         messageWindow.remove()
         for (let kb of kickButtons) {
             kb.style.visibility = "visible"
         }
         if (intentos === 5 ){
+            golesAcumulados >= 4 ? tableroResultado+= `<p>🏆 Campeon! 🏆</p>` : tableroResultado+= `<p>Estuvo cerca! 😕</p>`
             terminarPartida()
         }
     }
@@ -97,18 +113,31 @@ function patear(ingreso) {
 
 
 const terminarPartida = () => {
+    Swal.fire({
+        title: 'Fin de la partida!',
+        html: tableroResultado,
+        iconHtml: '<img src="./img/world-cup.png">',
+        imageSize: '80x80',
+        customClass: {
+            icon: "no-border"
+        }
+    })
     alert("Excelente juego! Pero todavía falta para Qatar...\n Mientras podes jugar de nuevo!")
     reiniciarPuntajes()
     playArea.style.display = "none";
+    
+    for(let btn of deleteButtons) {
+        btn.style.visibility = "visible"
+    }
+    for (let kb of kickButtons){
+        kb.style.visibility = "visible"
+    }
 }
 
 const anotador = (intento, resultado) => {
-    str= "Penal n° " + intento + ": "
-    if (resultado === "gol"){
-        str += "Gol\n"
-    } else {
-        str += "Atajado\n"
-    }
+    str= `<p> Penal n° " ${intento}: `
+    resultado ? str += "Gol! ✔️" : str+= "Atajado ❌"
+    str += `</p>`
     tableroResultado += str
 }
 
@@ -119,7 +148,20 @@ const jugar = () => {
         
     } else {
         console.log("-- Comienzo del juego --")
-        alert("Bienvenido al pateapenales! \n Debe anotar al menos 4 goles para ser el campeón!\n Para patear o atajar, ingrese un número del 1 al 5 \n Quién ganará?")
+        
+        deleteButtons = document.getElementsByClassName("delete-button")
+        for(let btn of deleteButtons) {
+            btn.style.visibility = "hidden"
+        }
+        Swal.fire({
+            title: 'Bienvenido al pateapenales!',
+            text: 'Debe anotar al menos 4 goles para ser el campeón',
+            iconHtml: '<img src="./img/world-cup.png">',
+            imageSize: '80x80',
+            customClass: {
+                icon: "no-border"
+            }
+        })
         
         playArea.style.display = "block"
         
@@ -235,6 +277,8 @@ const cargarJugadores = () => {
 
 const cargarListaPlantel = (jugadores) => {
     
+    
+    
     let plantel = document.getElementById("team-container")
     plantel.innerHTML = ""
     jugadores.forEach( jugador => {
@@ -246,7 +290,7 @@ const cargarListaPlantel = (jugadores) => {
         <div class="card-body">
         <h5 class="card-title">${jugador.nombre} ${jugador.apellido}</h5>
         <p class="card-text"> Camiseta n°${jugador.camiseta}</p>
-        <button class="boton btn btn-outline-primary delete-player" onclick="borrarJugador(${jugador.camiseta})">Eliminar</button>
+        <button class="delete-button btn btn-outline-primary delete-player" onclick="borrarJugador(${jugador.camiseta})">Eliminar</button>
         </div>`
         plantel.append(playerCard)
     });
@@ -292,9 +336,6 @@ startSubmit.addEventListener("click", jugar)
 
 let playerSubmit = document.getElementById("player-submit")
 playerSubmit.addEventListener("click",cargarJugadores)
-
-let deleteSubmit = document.getElementById("player-delete-submit")
-deleteSubmit.addEventListener("click",borrarJugador)
 
 let deleteAllSubmit = document.getElementById("delete-all-submit")
 deleteAllSubmit.addEventListener("click", borrarTodo)
