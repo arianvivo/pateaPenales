@@ -32,6 +32,7 @@ const reiniciarPuntajes = () => {
     resultado = 0
     intentos = 0
     tableroResultado = ""
+    mensajePenal = ""
 }
 
 const esGol = (zonaElegida) => {
@@ -48,8 +49,7 @@ const esGol = (zonaElegida) => {
 
 function patear(ingreso) {
     console.log("=== COMIENZO DE PATADA ===")
-    console.log("kickbuttons:" + kickButtons)
-    
+   
     for (let kb of kickButtons){
         kb.style.visibility = "hidden"
     }
@@ -66,7 +66,7 @@ function patear(ingreso) {
     <p class=\"kick-message-player-data\">Ejecuta ${jugadores[index].nombre} ${jugadores[index].apellido}</p>
     <pclass=\"kick-message-player-shirt\">con la casaca n°  ${jugadores[index].camiseta}</p>
     `
-    playArea.appendChild(messageWindow)
+    playArea.prepend(messageWindow)
     
     let mensajePenal = "<p class=\"kick-message-prelude\">Se prepara "+ jugadores[index].apellido + " ...</p>"
     if (ingreso === 1) {
@@ -88,7 +88,7 @@ function patear(ingreso) {
             golesAcumulados++
         } else {
             mensajePenal += "<p class=\"kick-message-keeper\">ATAJÓ EL ARQUERO!</p>"
-            anotador(intentos, true)
+            anotador(intentos, false)
 
         }
         messageWindow.innerHTML = `${mensajePenal}`
@@ -108,17 +108,6 @@ function patear(ingreso) {
 }
 
 const terminarPartida = () => {
-    Swal.fire({
-        title: 'Fin de la partida!',
-        html: tableroResultado,
-        iconHtml: '<img src="./img/world-cup.png">',
-        imageSize: '80x80',
-        customClass: {
-            icon: "no-border"
-        }
-    })
-    reiniciarPuntajes()
-    playArea.style.display = "none";
     
     for(let btn of deleteButtons) {
         btn.style.visibility = "visible"
@@ -126,6 +115,18 @@ const terminarPartida = () => {
     for (let kb of kickButtons){
         kb.style.visibility = "visible"
     }
+
+    Swal.fire({
+        title: 'Fin de la partida!',
+        html: tableroResultado,
+        iconHtml: '<img src="./img/world-cup.png">',
+        // imageSize: '80x80',
+        customClass: {
+            icon: "no-border"
+        }
+    })
+    reiniciarPuntajes()
+    playArea.style.display = "none";
 }
 
 const anotador = (intento, resultado) => {
