@@ -31,8 +31,10 @@ const reiniciarPuntajes = () => {
     eleccionMaqina = 0
     resultado = 0
     intentos = 0
+    index=0
     tableroResultado = ""
     mensajePenal = ""
+    
 }
 
 const esGol = (zonaElegida) => {
@@ -53,7 +55,6 @@ function patear(ingreso) {
     for (let kb of kickButtons){
         kb.style.visibility = "hidden"
     }
-    
     intentos++
     console.log("Se pateó a " + ingreso)
     console.log("intentos:" + intentos)
@@ -108,14 +109,6 @@ function patear(ingreso) {
 }
 
 const terminarPartida = () => {
-    
-    for(let btn of deleteButtons) {
-        btn.style.visibility = "visible"
-    }
-    for (let kb of kickButtons){
-        kb.style.visibility = "visible"
-    }
-    startSubmit.style.visibility = "hidden"
 
     Swal.fire({
         title: 'Fin de la partida!',
@@ -125,11 +118,24 @@ const terminarPartida = () => {
             icon: "no-border"
         }
     })
+
     reiniciarPuntajes()
+    
+    for(let btn of deleteButtons) {
+        btn.style.visibility = "visible"
+    }
+    for (let kb of kickButtons){
+        kb.style.visibility = "visible"
+    }
+    startSubmit.style.visibility = "hidden"
+    
     playArea.style.display = "none";
+    
 }
 
 const abortPlay = () => {
+    reiniciarPuntajes()
+
     for(let btn of deleteButtons) {
         btn.style.visibility = "visible"
     }
@@ -138,7 +144,6 @@ const abortPlay = () => {
     }
     startSubmit.style.visibility = "visible"
     endSubmit.style.visibility = "hidden"
-    reiniciarPuntajes()
     playArea.style.display = "none";
     Swal.fire({
         icon: 'error',
@@ -146,6 +151,7 @@ const abortPlay = () => {
         text: 'Partida finalizada!',
       })
 }
+
 const anotador = (intento, resultado) => {
     str= `<p> Penal n° " ${intento}: `
     resultado ? str += "Gol ! ✔️" : str+= "Atajado ! ❌"
@@ -160,7 +166,7 @@ const jugar = () => {
         
     } else {
         console.log("-- Comienzo del juego --")
-        
+
         deleteButtons = document.getElementsByClassName("delete-button")
         for(let btn of deleteButtons) {
             btn.style.visibility = "hidden"
@@ -178,18 +184,6 @@ const jugar = () => {
         })
         
         playArea.style.display = "block"
-        
-        let middleKick = document.getElementById("middle-kick")
-        middleKick.addEventListener("click",  () => { patear(1)})
-        let bottomLeftKick = document.getElementById("bottom-left-kick")
-        bottomLeftKick.addEventListener("click", () => { patear(2)})
-        let topLeftKick = document.getElementById("top-left-kick")
-        topLeftKick.addEventListener("click", () => { patear(3)})
-        let bottomRightKick = document.getElementById("bottom-right-kick")
-        bottomRightKick.addEventListener("click", () => { patear(4)})
-        let topRightKick = document.getElementById("top-right-kick")
-        topRightKick.addEventListener("click", () => { patear(5)})
-        
         
     }
 }
@@ -360,3 +354,13 @@ deleteAllSubmit.addEventListener("click", borrarTodo)
 let loadDefaultSubmit = document.getElementById("load-default-submit")
 loadDefaultSubmit.addEventListener("click", cargarDefault)
 
+let middleKick = document.getElementById("middle-kick")
+middleKick.addEventListener("click",  () => { patear(1)})
+let bottomLeftKick = document.getElementById("bottom-left-kick")
+bottomLeftKick.addEventListener("click", () => { patear(2)})
+let topLeftKick = document.getElementById("top-left-kick")
+topLeftKick.addEventListener("click", () => { patear(3)})
+let bottomRightKick = document.getElementById("bottom-right-kick")
+bottomRightKick.addEventListener("click", () => { patear(4)})
+let topRightKick = document.getElementById("top-right-kick")
+topRightKick.addEventListener("click", () => { patear(5)})
