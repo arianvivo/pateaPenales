@@ -5,7 +5,6 @@ let intentos = 0
 let tableroResultado = ""
 let jugadores = []
 let deleteButtons = []
-let messageWindow = document.object
 
 let jugadoresPorDefecto = [
     { nombre: "Lionel", apellido: "Messi", camiseta: 10, custom: false},
@@ -47,7 +46,6 @@ const esGol = (zonaElegida) => {
     return true
 }
 
-
 function patear(ingreso) {
     console.log("=== COMIENZO DE PATADA ===")
     console.log("kickbuttons:" + kickButtons)
@@ -61,8 +59,7 @@ function patear(ingreso) {
     console.log("intentos:" + intentos)
     let index = intentos - 1
     console.log("index :" + index)
-    // let 
-    messageWindow = document.createElement("div")
+    let messageWindow = document.createElement("div")
     messageWindow.className="message-window"    
     messageWindow.innerHTML = `
     <h3 class=\"kick-message-title\">INTENTO N° ${intentos}</h3>
@@ -110,8 +107,6 @@ function patear(ingreso) {
     , 6000)
 }
 
-
-
 const terminarPartida = () => {
     Swal.fire({
         title: 'Fin de la partida!',
@@ -122,7 +117,6 @@ const terminarPartida = () => {
             icon: "no-border"
         }
     })
-    alert("Excelente juego! Pero todavía falta para Qatar...\n Mientras podes jugar de nuevo!")
     reiniciarPuntajes()
     playArea.style.display = "none";
     
@@ -136,7 +130,7 @@ const terminarPartida = () => {
 
 const anotador = (intento, resultado) => {
     str= `<p> Penal n° " ${intento}: `
-    resultado ? str += "Gol! ✔️" : str+= "Atajado ❌"
+    resultado ? str += "Gol ! ✔️" : str+= "Atajado ! ❌"
     str += `</p>`
     tableroResultado += str
 }
