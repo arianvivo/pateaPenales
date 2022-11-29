@@ -302,8 +302,6 @@ const cargarJugadores = () => {
 
 const cargarListaPlantel = (jugadores) => {
     
-    
-    
     let plantel = document.getElementById("team-container")
     plantel.innerHTML = ""
     jugadores.forEach( jugador => {
