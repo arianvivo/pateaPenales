@@ -162,7 +162,6 @@ const anotador = (intento, resultado) => {
 const jugar = () => {
     
     if (jugadores.length < 5) {
-        // alert("Debe completar el plantel antes de comezar el juego!")
         Swal.fire({
             icon: 'error',
             title: 'Hay equipo!... O no?',
@@ -207,7 +206,7 @@ const chequearNombre = (nombre) => {
         Swal.fire({
             icon: 'error',
             title: 'N0mbr3 1nv4lid0',
-            text: 'El nombre/apellido no puede contener números!\n(A menos que sea el hijo de Elon Musk...',
+            text: 'El nombre/apellido no puede contener números! (A menos que sea el hijo de Elon Musk...',
         })
         return false
     } else {
@@ -263,7 +262,11 @@ const cargarJugadores = () => {
     console.log("=== Comienzo carga de jugadores! ===")
     if (jugadores.length === 5){
         console.log("Plantel lleno")
-        alert("El plantel está lleno! Elimine un jugador para cargar otro.")
+        Swal.fire({
+            icon: 'error',
+            title: 'Overflow de jugadores!',
+            text: 'El plantel está lleno! Elimine un jugador para cargar otro.',
+        })
     } else {
         let firstName = document.getElementById("player-first-name").value
         let lastName = document.getElementById("player-last-name").value
@@ -275,11 +278,11 @@ const cargarJugadores = () => {
         } else if (!chequearNombre(lastName)){
             document.getElementById("player-last-name").value = ""
         } else if (!chequearCamiseta(shirtNumber)){
-            alert("Sólo ingresar números de camiseta entre entre 1 y 99")
+            console.log("Sólo ingresar números de camiseta entre entre 1 y 99")
         } else if (camisetaEnUso(shirtNumber,jugadores)){
-            alert("Camiseta ocupada!")
+            console.log("Camiseta ocupada!")
         } else if (jugadorExiste(firstName,lastName,jugadores)){
-            alert("Ya existe ese jugador!")
+            console.log("Ya existe ese jugador!")
         } else {
             console.log("=== Controles exitosos ===")
             let newPlayer = {
