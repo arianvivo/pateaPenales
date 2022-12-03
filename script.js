@@ -127,8 +127,8 @@ const terminarPartida = () => {
     for (let kb of kickButtons){
         kb.style.visibility = "visible"
     }
-    startSubmit.style.visibility = "hidden"
-    
+    startSubmit.style.visibility = "visible"
+    endSubmit.style.visibility = "hidden"
     playArea.style.display = "none";
     
 }
