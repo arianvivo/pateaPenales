@@ -230,6 +230,11 @@ const camisetaEnUso = (shirtNumber, jugadores) => {
     console.log("Chequeando si la camiseta está en uso...")
     for (let jugador of jugadores){
         if (Number(shirtNumber) === jugador.camiseta){
+            Swal.fire({
+                icon: 'error',
+                title: 'Casaca ocupada!',
+                text: 'Ese número de camiseta ya está ocupado! Por favor elegí otro...',
+            })
             console.log("Camiseta en uso!")
             return true
         }
