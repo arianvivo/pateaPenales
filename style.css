@@ -23,6 +23,7 @@
 
 .team-container{
     display: flex;
+    justify-content: center;
 }
 
 .team-container .card {
