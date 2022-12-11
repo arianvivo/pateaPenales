@@ -490,7 +490,10 @@ const searchApiByID = (playerId) => {
         }
         
         Swal.fire({
-            icon: `${image}`,
+            iconHtml: '<img src="./img/player-icon.png">',
+            customClass: {
+                icon: "no-border"
+            },
             title: `${datos.player.name}`,
             html: `Posición: ${datos.player.jerseyNumber ? datos.player.jerseyNumber : "No disponible"}<br>
             Altura: ${datos.player.height}<br>
