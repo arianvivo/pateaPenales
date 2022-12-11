@@ -24,6 +24,7 @@ window.addEventListener('load', () => {
     cargarListaPlantel(jugadores);
     console.log("Jugadores:")
     console.log(jugadores)
+    limpiarControles()
 });
 
 const reiniciarPuntajes = () => {
@@ -153,7 +154,7 @@ const abortPlay = () => {
 }
 
 const anotador = (intento, resultado) => {
-    str= `<p> Penal n° " ${intento}: `
+    str= `<p> Penal n° ${intento}: `
     resultado ? str += "Gol ! ✔️" : str+= "Atajado ! ❌"
     str += `</p>`
     tableroResultado += str
@@ -266,6 +267,7 @@ const limpiarControles = () => {
     document.getElementById("player-first-name").value = ""
     document.getElementById("player-last-name").value = ""
     document.getElementById("player-shirt-number").value = ""
+    document.getElementById("search-player-input").value = ""
 }
 
 const cargarJugadores = (fn, ln, sn) => {
@@ -363,18 +365,43 @@ const borrarJugador = (jugadorCamiseta) => {
 
 
 const borrarTodo = () => {
-    if (confirm("Esta seguro que desea borrar todo el plantel?")){
-        jugadores.splice(0, jugadores.length)
-        cargarListaPlantel(jugadores)
-    }
+    
+    Swal.fire({
+        title: 'Borrón y cuenta nueva!',
+        text: "Esta seguro que desea borrar todo el plantel?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, váyanse todos!',
+        cancelButtonText: 'Pensandolo mejor...',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            jugadores.splice(0, jugadores.length)
+            cargarListaPlantel(jugadores)
+        }
+    })
+    
 }
 
 const cargarDefault = () => {
-    if (confirm("Está seguro de que desea cargar los valores por defecto?")){
-        jugadores.splice(0, jugadores.length)
-        jugadores = jugadoresPorDefecto.slice()
-        cargarListaPlantel(jugadores);
-    }
+    Swal.fire({
+        title: 'Sale reseteo...',
+        text: "Está seguro de que desea cargar los valores por defecto?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, vénga ese plantel!',
+        cancelButtonText: 'Pensandolo mejor...',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            jugadores.splice(0, jugadores.length)
+            jugadores = jugadoresPorDefecto.slice()
+            cargarListaPlantel(jugadores);
+        }
+    })
+    
 }
 
 let playArea = document.getElementById("play-area")
@@ -409,11 +436,22 @@ topRightKick.addEventListener("click", () => { patear(5)})
 
 
 //footapi
+
+// Tuve que registrarme con dos cuentas en la API porque tiene un límite de consultas diario, en caso de que no funcione con uno probar con el otro
+
+const selectAPIKey = () => {
+    let selectedKey = document.getElementById("api-key-selection")
+    if (selectedKey.value === "1") {
+        return "47065445c4mshc8bc5745c727911p1ce5e6jsna60587302a9f"
+    } else {
+        return "d7eb68711bmshfd158b0aa516096p1af9bbjsn137987f9610c"
+    }
+}
+
 const options = {
     method: 'GET',
     headers: {
-        // 'X-RapidAPI-Key': '47065445c4mshc8bc5745c727911p1ce5e6jsna60587302a9f',
-        'X-RapidAPI-Key': 'd7eb68711bmshfd158b0aa516096p1af9bbjsn137987f9610c',
+        'X-RapidAPI-Key': selectAPIKey(),
         'X-RapidAPI-Host': 'footapi7.p.rapidapi.com'
     }
 };
@@ -432,10 +470,17 @@ playerSearchButton.addEventListener("click", loadApiResults)
 
 
 const searchApi = (searchParameters) => {
-    apiResultsField.innerHTML = ""
+    apiResultsField.innerHTML = `
+    <div class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>`
+    
     fetch(`https://footapi7.p.rapidapi.com/api/search/${searchParameters}`, options)
     .then(response => response.json())
     .then((datos) => {
+        apiResultsField.innerHTML = ''
         datos.results.forEach((resultadito) => {      
             if (resultadito.type === "player") {              //footapi devuelve un solo objeto results con el array de resultados dentro
                 
@@ -445,7 +490,7 @@ const searchApi = (searchParameters) => {
                 
                 // let playerImage =document.createElement("img");
                 // playerImage.alt = resultadito.entity.name
-                // fetch(`https://footapi7.p.rapidapi.com/api/player/${resultadito.entity.id}/image`, options)      // esto es un feature de las suscripciones pagas de la API, devuelve la imagen
+                // fetch(`https://footapi7.p.rapidapi.com/api/player/${resultadito.entity.id}/image`, options)      // esto es un endpoint de las suscripciones pagas de la API, devuelve la imagen
                 // .then(response => response.json())                                                               // mas allá de que no se use para este proyecto, me pareció propicio dejarlo
                 // .then(response => {
                 //     playerImage.scr = response

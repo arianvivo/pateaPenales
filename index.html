@@ -69,13 +69,26 @@
                 </form>
                 <button type="button" class="btn btn-primary" id="player-submit">Añadir</button>
 
-                <h4>Buscar jugadores</h4>
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Recipient's username"
-                        aria-label="Recipient's username" aria-describedby="basic-addon2" id="search-player-input">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button"
-                            id="search-player-button">Button</button>
+                <div class="player-search-container">
+                    <h4>Buscar jugadores</h4>
+                    <p>Busca cualquier jugador!</p>
+                    <div class="input-group mb-3">
+                        <input type="text" id="search-player-input" class="form-control"
+                            placeholder="Ingrese el nombre del jugador" aria-label="Ingrese el nombre del jugador"
+                            aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button"
+                                id="search-player-button">Buscar</button>
+                        </div>
+                        <div class="api-control-container">
+                            <span>
+                                API key:
+                            </span>
+                            <select id="api-key-selection">
+                                <option selected value="1">Primaria</option>
+                                <option value="2">Alternativa</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 

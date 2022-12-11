@@ -182,10 +182,24 @@
     font-weight: 800;
 }
 
+.player-search-container {
+    margin: 50px auto;
+    width: 60%;
+}
+
+.api-control-container {
+    margin:auto 
+}
+
+#api-key-selection {
+    width: 100px;
+    background-color: white;
+    border-radius: 15px;
+}
 .api-team-container{
     display: flex;
     flex-wrap: wrap;
-
+    justify-content: center;
 }
 
 .api-team-container > * {
