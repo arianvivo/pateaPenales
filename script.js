@@ -249,6 +249,11 @@ const jugadorExiste = (firstName, lastName, jugadores) => {
             console.log("Info: apellido repetido. Chequeando nombre...")
             if (firstName === jugador.nombre){
                 console.log("Nombre repetido. Jugador duplicado!")
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Doppleganger!',
+                    text: 'Ese jugador ya está en el plantel!',
+                })
                 return true
             }
         }
@@ -263,7 +268,7 @@ const limpiarControles = () => {
     document.getElementById("player-shirt-number").value = ""
 }
 
-const cargarJugadores = () => {
+const cargarJugadores = (fn, ln, sn) => {
     console.log("=== Comienzo carga de jugadores! ===")
     if (jugadores.length === 5){
         console.log("Plantel lleno")
@@ -273,9 +278,9 @@ const cargarJugadores = () => {
             text: 'El plantel está lleno! Elimine un jugador para cargar otro.',
         })
     } else {
-        let firstName = document.getElementById("player-first-name").value
-        let lastName = document.getElementById("player-last-name").value
-        let shirtNumber = document.getElementById("player-shirt-number").value
+        let firstName = fn ? fn : document.getElementById("player-first-name").value
+        let lastName = ln ? ln : document.getElementById("player-last-name").value
+        let shirtNumber = sn ? sn : document.getElementById("player-shirt-number").value
         
         if (!chequearNombre(firstName)){
             document.getElementById("player-first-name").value = ""
@@ -303,6 +308,23 @@ const cargarJugadores = () => {
         }
     }
     console.log("=== Fin carga de jugadores ===")
+}
+
+const cargarJugadoresDesdeApi = (fn, ln) => {
+    (async () => {
+        
+        const { value: shirt } =  await Swal.fire({
+            title: 'Ingrese la camiseta:',
+            input: 'text',
+            inputLabel: 'N° de Camiseta',
+        })
+        if (shirt) {
+            console.log("Ingresó!")
+            console.log(`${fn},${ln},${shirt}`)
+            limpiarControles()
+            cargarJugadores (fn, ln, shirt)
+        }
+    })()
 }
 
 const cargarListaPlantel = (jugadores) => {
@@ -384,3 +406,96 @@ let bottomRightKick = document.getElementById("bottom-right-kick")
 bottomRightKick.addEventListener("click", () => { patear(4)})
 let topRightKick = document.getElementById("top-right-kick")
 topRightKick.addEventListener("click", () => { patear(5)})
+
+
+//footapi
+const options = {
+    method: 'GET',
+    headers: {
+        // 'X-RapidAPI-Key': '47065445c4mshc8bc5745c727911p1ce5e6jsna60587302a9f',
+        'X-RapidAPI-Key': 'd7eb68711bmshfd158b0aa516096p1af9bbjsn137987f9610c',
+        'X-RapidAPI-Host': 'footapi7.p.rapidapi.com'
+    }
+};
+
+loadApiResults = () => {
+    console.log("Valor de busqueda: " + playerSearchParams.value)
+    searchApi(playerSearchParams.value)
+}
+
+let apiResultsField = document.getElementById("api-results")
+
+let playerSearchParams = document.getElementById("search-player-input")
+
+let playerSearchButton = document.getElementById("search-player-button")
+playerSearchButton.addEventListener("click", loadApiResults)
+
+
+const searchApi = (searchParameters) => {
+    apiResultsField.innerHTML = ""
+    fetch(`https://footapi7.p.rapidapi.com/api/search/${searchParameters}`, options)
+    .then(response => response.json())
+    .then((datos) => {
+        datos.results.forEach((resultadito) => {      
+            if (resultadito.type === "player") {              //footapi devuelve un solo objeto results con el array de resultados dentro
+                
+                let nameArray = resultadito.entity.name.split(" ")          // esto lo tuve que improvisar, ya que la API tiene un campo "first name" y otro "last name", pero ambos siempre están vacíos.
+                let fetchedPlayerLastName = nameArray.pop()                 // dudosa la calidad de la API, pero era la única gratuita que proveía lo que necesitaba
+                let fetchedPlayerFirstName = nameArray.join(" ").toString() // no siempre es exacto lamentablemente
+                
+                // let playerImage =document.createElement("img");
+                // playerImage.alt = resultadito.entity.name
+                // fetch(`https://footapi7.p.rapidapi.com/api/player/${resultadito.entity.id}/image`, options)      // esto es un feature de las suscripciones pagas de la API, devuelve la imagen
+                // .then(response => response.json())                                                               // mas allá de que no se use para este proyecto, me pareció propicio dejarlo
+                // .then(response => {
+                //     playerImage.scr = response
+                // })
+                let playerCard = document.createElement("div")
+                playerCard.className = "card"
+                playerCard.innerHTML += `
+                <img class="card-img-top" src="./img/players/dummy.jpg" alt="${fetchedPlayerLastName}">
+                <div class="card-body">
+                <h5 class="card-title">${resultadito.entity.name}</h5>
+                <p class="card-text"> ID n°${resultadito.entity.id} <br> Nacionalidad: ${resultadito.entity.country.name} <br>Nombre: ${fetchedPlayerFirstName}<br> Apellido: ${fetchedPlayerLastName} </p>
+                <button class="btn btn-outline-primary" onclick=searchApiByID(${resultadito.entity.id})>Ver más info</button>
+                <button class="btn btn-outline-primary" onclick=cargarJugadoresDesdeApi("${fetchedPlayerFirstName}","${fetchedPlayerLastName}")>Añadir al equipo</button>
+                </div>`
+                apiResultsField.append(playerCard)
+            }
+        })    
+    })
+    .catch(err => console.error(err));
+}
+
+
+const searchApiByID = (playerId) => {
+    let image;
+    fetch(`https://footapi7.p.rapidapi.com/api/player/${playerId}/image`, options)
+    .then(response => response.blob())
+    .then(response => {
+        image = URL.createObjectURL(response)
+    })
+    .catch(err => console.error(err));
+    
+    fetch(`https://footapi7.p.rapidapi.com/api/player/${playerId}`, options)
+    .then(response => response.json())
+    .then((datos) => {
+        console.log(datos)
+        let lateralidad = () => {
+            if (datos.player.preferredFoot === "Right"){
+                return "Diestro"
+            } else {
+                return "Zurdo"
+            }
+        }
+        
+        Swal.fire({
+            icon: `${image}`,
+            title: `${datos.player.name}`,
+            html: `Posición: ${datos.player.jerseyNumber ? datos.player.jerseyNumber : "No disponible"}<br>
+            Altura: ${datos.player.height}<br>
+            Pie de preferencia: ${lateralidad()} <br>`,
+        })
+    })
+    .catch(err => console.error(err));
+}

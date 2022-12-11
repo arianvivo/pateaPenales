@@ -50,6 +50,8 @@
 
             <div class="player-load-delete-forms">
                 <h3>Cargar jugadores</h3>
+
+                <h4>Crear jugador personalizado</h4>
                 <form id="player-form">
                     <div class="form-group">
                         <label for="nombre-player">Nombre</label>
@@ -67,6 +69,19 @@
                 </form>
                 <button type="button" class="btn btn-primary" id="player-submit">Añadir</button>
 
+                <h4>Buscar jugadores</h4>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Recipient's username"
+                        aria-label="Recipient's username" aria-describedby="basic-addon2" id="search-player-input">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button"
+                            id="search-player-button">Button</button>
+                    </div>
+                </div>
+
+                <div id="api-results" class="api-team-container">
+
+                </div>
 
                 <form id="player-delete">
                     <h3>Eliminar jugadores</h3>
